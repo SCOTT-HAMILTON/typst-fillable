@@ -103,10 +103,16 @@ def extract_field_metadata(
             prefix = value.get("prefix", "") or ""
             suffix = value.get("suffix", "") or ""
 
+            field_type = value.get("fieldType", "text")
+            default_value = None
+            if field_type in [ "text", "textarea" ]:
+                default_value = value.get("defaultValue", None)
+
             fields.append(
                 FieldMetadata(
                     fieldName=field_name,
-                    fieldType=value.get("fieldType", "text"),
+                    fieldType=field_type,
+                    defaultValue=default_value,
                     pos=pos,
                     dimensions=dimensions,
                     groupName=value.get("groupName"),

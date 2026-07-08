@@ -107,6 +107,7 @@ def create_form_overlay(
                 if field.fieldType == "text":
                     c.acroForm.textfield(
                         name=field.fieldName,
+                        value=field.defaultValue,
                         x=field_x,
                         y=pdf_y,
                         width=actual_field_width,
@@ -122,6 +123,7 @@ def create_form_overlay(
                 elif field.fieldType == "textarea":
                     c.acroForm.textfield(
                         name=field.fieldName,
+                        value=field.defaultValue,
                         x=field_x,
                         y=pdf_y,
                         width=actual_field_width,
@@ -137,6 +139,7 @@ def create_form_overlay(
                 elif field.fieldType == "checkbox":
                     c.acroForm.checkbox(
                         name=field.fieldName,
+                        checked=field.defaultValue,
                         x=absolute_x,
                         y=pdf_y,
                         size=field.dimensions.get("width", 10),

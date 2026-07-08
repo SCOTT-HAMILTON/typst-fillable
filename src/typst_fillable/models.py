@@ -18,6 +18,7 @@ class FieldMetadata(BaseModel):
     fieldType: str  # text, textarea, checkbox, radio
     pos: FieldPosition
     dimensions: dict[str, float]
+    defaultValue: object = None
     groupName: str | None = None
     fillCell: bool = False
     positionOffset: dict[str, float] = {"x": 0, "y": 0}
