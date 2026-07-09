@@ -1,5 +1,7 @@
 """Pydantic models for form field metadata."""
 
+from pathlib import Path
+
 from pydantic import BaseModel
 
 
@@ -35,3 +37,5 @@ class FieldStyle(BaseModel):
     text_color: str = "#000000"
     font_size: int = 8
     border_width: int = 0
+    font_path: Path|None = None
+    font_name: str|None = None

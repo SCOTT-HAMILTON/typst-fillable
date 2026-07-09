@@ -4,6 +4,8 @@ from io import BytesIO
 
 from reportlab.lib.colors import HexColor
 from reportlab.pdfgen import canvas
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 
 from .models import FieldMetadata, FieldStyle
 
@@ -51,6 +53,11 @@ def create_form_overlay(
             fields_by_page[page].append(field)
 
         c = canvas.Canvas(buffer, pagesize=(page_width, page_height))
+
+        styleFontDefined = False
+        if style.font_path is not None and style.font_name is not None:
+            styleFontDefined = True
+            pdfmetrics.registerFont(TTFont(style.font_name, style.font_path))
         all_radio_groups: dict[str, list[str]] = {}
 
         for page_num in range(1, page_count + 1):
@@ -105,7 +112,7 @@ def create_form_overlay(
                 field_font_size = 6 if (field.prefix or field.suffix) else style.font_size
 
                 if field.fieldType == "text":
-                    c.acroForm.textfield(
+                    args = dict(
                         name=field.fieldName,
                         value=field.defaultValue or "",
                         x=field_x,
@@ -120,8 +127,11 @@ def create_form_overlay(
                         fontSize=field_font_size,
                         fieldFlags="",
                     )
+                    if styleFontDefined:
+                        args['fontName'] = style.font_name
+                    c.acroForm.textfield(**args)
                 elif field.fieldType == "textarea":
-                    c.acroForm.textfield(
+                    args = dict(
                         name=field.fieldName,
                         value=field.defaultValue or "",
                         x=field_x,
@@ -136,6 +146,9 @@ def create_form_overlay(
                         fontSize=style.font_size,
                         fieldFlags="multiline",
                     )
+                    if styleFontDefined:
+                        args['fontName'] = style.font_name
+                    c.acroForm.textfield(**args)
                 elif field.fieldType == "checkbox":
                     c.acroForm.checkbox(
                         name=field.fieldName,
